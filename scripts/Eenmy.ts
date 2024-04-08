@@ -6,6 +6,8 @@ export class Eenmy extends Component {
     @property
     speed:number = 500;
     isMove:boolean = true;
+    onDead: () => void;
+    tatget: any;
 
     protected onEnable(): void {
         let collider = this.node.getComponent(Collider2D);
@@ -24,8 +26,6 @@ export class Eenmy extends Component {
     start() {
 
         
-    
-
     }
 
     update(deltaTime: number) {
@@ -44,6 +44,7 @@ export class Eenmy extends Component {
         let bulletGrounp = 1 << 1;
         if(otherCollider.group == bulletGrounp){
             // otherCollider.node.destroy();
+            this.onDead?.call(this.tatget);
             this.isMove = false;
             resources.load('enemy0_die', ImageAsset, (err: any, spriteFrame) => {
                 if(!err){
@@ -55,9 +56,14 @@ export class Eenmy extends Component {
 
               this.scheduleOnce(() => {
                 this.node.destroy();
-            }, 0.3); // 延迟0秒，确保在下一帧执行销毁
+            }, 0.1); // 延迟0秒，确保在下一帧执行销毁
 
         }
+    }
+
+    onDeadCallback(onDead:()=>void,target?:any){
+        this.onDead = onDead;
+        this.tatget = target;
     }
 }
 

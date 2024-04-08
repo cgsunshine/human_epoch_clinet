@@ -1,4 +1,4 @@
-import { _decorator, Component, Node ,v3,EventTouch, Prefab, ImageAsset, Collider2D,Contact2DType, resources, Sprite,SpriteFrame,instantiate,Asset} from 'cc';
+import { _decorator, Component, Node ,v3,EventTouch, Prefab, ImageAsset, Collider2D,Contact2DType, resources, Sprite,SpriteFrame,instantiate,Asset,sys} from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerControl')
@@ -6,6 +6,11 @@ export class PlayerControl extends Component {
     @property(Prefab)
     bulletPre: Prefab = null;
     isBullet:boolean = true;
+    isDie:false = false;
+    @property(Node)
+    homeBack:Node = null;
+    @property(Node)
+    maskNode:Node = null;
 
     protected onEnable(): void {
         let collider = this.node.getComponent(Collider2D);
@@ -23,8 +28,15 @@ export class PlayerControl extends Component {
 
     start() {
         console.log("start")
+        sys.localStorage.setItem('playerState', 0);
         this.node.on(Node.EventType.TOUCH_MOVE,(event:EventTouch)=>{
-            this.node.setWorldPosition(v3(event.getLocation().x,event.getLocation().y));
+            
+                this.node.setWorldPosition(v3(event.getLocation().x,event.getLocation().y,0));
+                // this.node.setPosition(v3(event.getLocation().x,event.getLocation().y));
+                console.log('event.getLocation()=',event.getLocation());
+                console.log('this.node.getPosition()=',this.node.getPosition());
+                console.log('this.node.getWorldPosition()=',this.node.getWorldPosition());
+            
         });
 
         this.schedule(()=>{
@@ -37,7 +49,7 @@ export class PlayerControl extends Component {
                     let bullNode = instantiate(data as Prefab)
                     // this.node.addChild(bullNode);
                     this.node.parent.addChild(bullNode);
-                    bullNode.setPosition(this.node.position.x,this.node.position.y+60);
+                    bullNode.setPosition(this.node.position.x-50,this.node.position.y+30);
              });
             }
           
@@ -51,6 +63,9 @@ export class PlayerControl extends Component {
         let bulletGrounp = 2 << 1;
         if(otherCollider.group == bulletGrounp){
             console.log('敌机和玩家碰了');
+            sys.localStorage.setItem('playerState', 1);
+            this.homeBack.active = true;
+            this.maskNode.active = true;
             this.isBullet = false;
             resources.load('hero1_die', ImageAsset, (err: any, spriteFrame) => {
                 if(!err){
@@ -59,6 +74,10 @@ export class PlayerControl extends Component {
                 }
               });
         }
+
+        this.scheduleOnce(() => {
+            this.node.destroy();
+        }, 0.5); // 延迟0秒，确保在下一帧执行销毁
         // console.log('otherCollider.group=',otherCollider.group);
         // console.log('selfCollider.group=',selfCollider.group);
         // console.log('1<<2=',1<<2);
