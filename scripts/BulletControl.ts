@@ -4,7 +4,7 @@ const { ccclass, property } = _decorator;
 @ccclass('BulletControl')
 export class BulletControl extends Component {
 
-    velocity: Vec2 = new Vec2(0,20);
+    velocity: Vec2 = new Vec2(0,25);
     isMoving:boolean = true;
 
     start() {

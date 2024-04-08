@@ -45,16 +45,25 @@ export class EnemyManager extends Component {
              this.schedule(()=>{
                 if(sys.localStorage.getItem('playerState') == 0){
 
-            
+                    
                     let EnemyNode = instantiate(this.enemyPre);
                     this.node.parent.addChild(EnemyNode);
                     // this.getComponentInChildren("LableScore").getComponentInChildren("Score").call;
                     EnemyNode.getComponent(Eenmy).onDeadCallback(this.onEnemyDead,this);
-                    EnemyNode.on
+                    // EnemyNode.on
+                    
+                    // x 400
+                    // y 800
 
-                    EnemyNode.setPosition(Math.random()*400-200,Math.random()*100+300);
+                    // y 400
+
+                    // EnemyNode.setPosition(Math.random()*400-200,Math.random()*100+300);
+
+                    EnemyNode.setPosition(Math.random()*window.innerWidth-window.innerWidth/2,Math.random()*100+window.innerHeight/2+100);
+
+
             }
-            },1);
+            },0.2);
 
 
         

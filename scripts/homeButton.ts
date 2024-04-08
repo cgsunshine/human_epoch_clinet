@@ -1,4 +1,4 @@
-import { _decorator, Component, Node,Event, EventHandler, Button,director } from 'cc';
+import { _decorator, Component, Node,Event, EventHandler, Button,director, v3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('homeButton')
@@ -14,6 +14,7 @@ export class homeButton extends Component {
 
     onLoad () {
         this.node.on(Button.EventType.CLICK, this.callback, this);
+        
     }
 
     callback (button: Button) {
@@ -33,7 +34,7 @@ export class homeButton extends Component {
 
 
     start() {
-      
+        
     }
 
     update(deltaTime: number) {

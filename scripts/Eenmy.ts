@@ -43,6 +43,10 @@ export class Eenmy extends Component {
     private onBeginContact(selfCollider:Collider2D,otherCollider:Collider2D){
         let bulletGrounp = 1 << 1;
         if(otherCollider.group == bulletGrounp){
+            let collider = this.node.getComponent(Collider2D);
+            if(collider){
+                collider?.off(Contact2DType.BEGIN_CONTACT,this.onBeginContact,this);
+            }
             // otherCollider.node.destroy();
             this.onDead?.call(this.tatget);
             this.isMove = false;
